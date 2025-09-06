@@ -1,5 +1,4 @@
 {-# LANGUAGE OverloadedStrings #-}
-{-# LANGUAGE OverloadedStrings #-}
 
 import Web.Scotty
 import Network.Wai.Middleware.RequestLogger (logStdoutDev)

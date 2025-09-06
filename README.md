@@ -155,3 +155,41 @@ parseAnswers fileContents = do
 Acredito que estejam "quebrando" a letra da música e a resposta do usuário em chaves para acessar o conteúdo, apenas com a diferença de que a primeira atribui **"*"** para **song** e a segunda atribui um valor **song'** para o mesmo.
 
 # Parte prática
+Primeiramente tentei executar o código abaixo:
+```haskell
+import Web.Scotty
+import Network.Wai.Middleware.RequestLogger (logStdoutDev)
+
+main :: IO ()
+main = scotty 3000 $ do
+  middleware logStdoutDev
+
+  get "/hello" $ do
+    text "Testando Scooty Haskell"
+```
+Porém esse execução gerou 2 erros:
+![Erros no terminal](img/erros_terminal.png)
+Após consultar descobir que a origem do primeiro erro foi que o tipo de **get** deveria ser **RoutePattern** e não uma string, resolvendo isso de modo que habilita string para ser interpretada como outros tipos derivados.
+```haskell
+{-# LANGUAGE OverloadedStrings #-}
+```
+O segundo erro ocorreu também por um erro de definição de tipo, pois a função esperava o tipo **Data.Text.Lazy.Text** e estava usando string, resolvendo do seguinte modo:
+```haskell
+text (pack "Testando Scooty Haskell")
+```
+Por fim, o código completo foi executado com sucesso
+```haskell
+{-# LANGUAGE OverloadedStrings #-}
+
+import Web.Scotty
+import Network.Wai.Middleware.RequestLogger (logStdoutDev)
+import Data.Text.Lazy (pack) 
+
+main :: IO ()
+main = scotty 3000 $ do
+  middleware logStdoutDev
+
+  get "/hello" $ do
+    text (pack "Testando Scooty Haskell") 
+```
+![resultado web](img/resultado_web.png)
